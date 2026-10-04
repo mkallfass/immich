@@ -1350,6 +1350,18 @@ describe(MetadataService.name, () => {
       expect(mocks.person.getDistinctNames).not.toHaveBeenCalled();
     });
 
+    it('should skip importing metadata face for assets with tags.RegionInfo but without RegionList', async () => {
+      const asset = AssetFactory.create();
+      mocks.assetJob.getForMetadataExtraction.mockResolvedValue(getForMetadataExtraction(asset));
+      mocks.systemMetadata.get.mockResolvedValue({ metadata: { faces: { import: true } } });
+      mockReadTags({
+        RegionInfo: { AppliedToDimensions: { W: 1000, H: 100, Unit: 'pixel' } },
+      } as Partial<ImmichTags>);
+      await sut.handleMetadataExtraction({ id: asset.id });
+      expect(mocks.asset.upsertExif).toHaveBeenCalled();
+      expect(mocks.person.getDistinctNames).not.toHaveBeenCalled();
+    });
+
     it('should skip importing faces without name', async () => {
       const asset = AssetFactory.create();
       mocks.assetJob.getForMetadataExtraction.mockResolvedValue(getForMetadataExtraction(asset));

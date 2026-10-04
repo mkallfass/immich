@@ -819,7 +819,7 @@ export class MetadataService extends BaseService {
 
   private hasTaggedFaces(tags: ImmichTags): tags is ImmichTagsWithFaces {
     return (
-      tags.RegionInfo !== undefined && tags.RegionInfo.AppliedToDimensions && tags.RegionInfo.RegionList.length > 0
+      tags.RegionInfo !== undefined && tags.RegionInfo.AppliedToDimensions && tags.RegionInfo.RegionList?.length > 0
     );
   }
 
